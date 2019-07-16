@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ANGUS &mdash; ANcient eGyptian Utility for Symbols</title>
+    <script src="jquery.js"></script>
+
+    <style>
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <h1>ANGUS &mdash; ANcient eGyptian Utility for Symbols</h1>
+
+    <div id="questionbox"/>
+
+    <div id="answerbox"><input type="text" id="answer" name="answer" class="hidden"/><div>
+
+    <div>
+      <button id="button-gen">Generate</button>
+      <button id="button-check" class="hidden">Check answer</button>
+    </div>
+
+    <div id="status">Status is fine.</div>
+
+    <script>
+var qnOb;
+$( document ).ready(function() {
+  $( "#button-gen" ).click(function( event ) {
+    $.ajax({
+      url:"/get/symbol",
+      success: function(result) {
+                 qnOb = JSON.parse(result);
+                 for image in qnOb.images {
+                   $("#questionbox").empty();
+                   $("#questionbox").append("<img href=\""+image+"\" />&nbsp;");
+                 }
+                 $("#button-gen").addClass("hidden");
+                 $("#button-check").removeClass("hidden");
+                 $(".answer").removeClass("hidden");
+               }
+    });
+  });
+
+  $( "#button-check" ).click(function( event ) {
+    claim = $("#answer").attr("value");
+    if(claim == qnOb.text) {
+      $("#status").html("Correct");
+    }
+    else {
+      $("#status").html("Incorrect, expected " + qnOb.text);
+    }
+    $("#button-gen").removeClass("hidden");
+    $("#button-check").addClass("hidden");
+  });
+});
+    </script>
+  </body>
+</html>
