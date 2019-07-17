@@ -25,6 +25,18 @@
 
     <script>
 var qnOb;
+
+accentsMap = {
+  "h.": "\u1E25",
+  "h)": "\u1E2B",
+  "h_": "\u1E96",
+  "s<": "\u0161",
+  "t_": "\u1E6F",
+  "d_": "\u1E0F",
+  "i<": "\u01D0"
+}
+
+
 $( document ).ready(function() {
   $( "#button-gen" ).click(function( event ) {
     $.ajax({
@@ -37,7 +49,7 @@ $( document ).ready(function() {
                  }
                  $("#button-gen").addClass("hidden");
                  $("#button-check").removeClass("hidden");
-                 $(".answer").removeClass("hidden");
+                 $("#answer").removeClass("hidden");
                }
     });
   });
@@ -53,7 +65,30 @@ $( document ).ready(function() {
     $("#button-gen").removeClass("hidden");
     $("#button-check").addClass("hidden");
   });
-});
+
+  $("#answer").on("input", function() {
+    entered = $("#answer").val().toLowerCase();
+
+    // Easy swaps
+    entered = entered.replace("a","\uA723");
+    entered = entered.replace("c","\uA725");
+
+    // Accents and decorations
+    [".","<",")","_"].forEach( function(accent,_) {
+      console.log("check for accent " + accent + " in " + entered);
+      // Use indexOf() not search() so we don't need to escape special chars like ".":
+      for(var pos = entered.indexOf(accent); pos != -1; pos = entered.indexOf(accent)) {
+        console.log("found accent " + accent + " at " + pos)
+        beginning = entered.slice(0,pos - 1);
+        toReplace = entered.slice(pos - 1, pos + 1);
+        end = entered.slice(pos + 1);
+        if(toReplace in accentsMap) toReplace = accentsMap[toReplace];
+        entered = beginning + toReplace + end;
+      }
+    });
+
+    $("#answer").val(entered)
+  });
     </script>
   </body>
 </html>
