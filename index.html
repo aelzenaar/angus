@@ -4,9 +4,11 @@
     <meta charset="utf-8" />
     <title>ANGUS &mdash; ANcient eGyptian Utility for Symbols</title>
     <script src="jquery.js"></script>
+    <script src="hiero.js"></script>
 
     <style>
       .hidden { display: none; }
+      #answer { font-size: 150%; }
     </style>
   </head>
   <body>
@@ -14,7 +16,7 @@
 
     <div id="questionbox"/>
 
-    <div id="answerbox"><input type="text" id="answer" name="answer" class="hidden"/><div>
+    <div id="answerbox"><input type="text" id="answer" name="answer" class="hidden2"/><div>
 
     <div>
       <button id="button-gen">Generate</button>
@@ -26,27 +28,16 @@
     <script>
 var qnOb;
 
-accentsMap = {
-  "h.": "\u1E25",
-  "h)": "\u1E2B",
-  "h_": "\u1E96",
-  "s<": "\u0161",
-  "t_": "\u1E6F",
-  "d_": "\u1E0F",
-  "i<": "\u01D0"
-}
-
-
 $( document ).ready(function() {
   $( "#button-gen" ).click(function( event ) {
     $.ajax({
       url:"/get/symbol",
       success: function(result) {
                  qnOb = JSON.parse(result);
-                 for image in qnOb.images {
+                 qnOb.images.forEach(function(image,_) {
                    $("#questionbox").empty();
                    $("#questionbox").append("<img href=\""+image+"\" />&nbsp;");
-                 }
+                 });
                  $("#button-gen").addClass("hidden");
                  $("#button-check").removeClass("hidden");
                  $("#answer").removeClass("hidden");
@@ -67,28 +58,9 @@ $( document ).ready(function() {
   });
 
   $("#answer").on("input", function() {
-    entered = $("#answer").val().toLowerCase();
-
-    // Easy swaps
-    entered = entered.replace("a","\uA723");
-    entered = entered.replace("c","\uA725");
-
-    // Accents and decorations
-    [".","<",")","_"].forEach( function(accent,_) {
-      console.log("check for accent " + accent + " in " + entered);
-      // Use indexOf() not search() so we don't need to escape special chars like ".":
-      for(var pos = entered.indexOf(accent); pos != -1; pos = entered.indexOf(accent)) {
-        console.log("found accent " + accent + " at " + pos)
-        beginning = entered.slice(0,pos - 1);
-        toReplace = entered.slice(pos - 1, pos + 1);
-        end = entered.slice(pos + 1);
-        if(toReplace in accentsMap) toReplace = accentsMap[toReplace];
-        entered = beginning + toReplace + end;
-      }
-    });
-
-    $("#answer").val(entered)
+    $("#answer").val(standardiseAccents($("#answer").val()))
   });
+});
     </script>
   </body>
 </html>
