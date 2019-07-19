@@ -1,7 +1,7 @@
 var hiero = function() {
 
-  function getHeiroglyphUrl(gardiner) {
-    return "https://en.wikipedia.org/w/extensions/wikihiero/img/hiero_" + gardiner.toUpperCase() + ".png"
+  function getHieroglyphUrl(gardiner) {
+    return "https://en.wikipedia.org/w/extensions/wikihiero/img/hiero_" + gardiner + ".png"
   }
 
   accentsMap = {
@@ -19,7 +19,7 @@ var hiero = function() {
     s = s.toLowerCase();
 
     // Standardise spelling first
-    s = s.replace("j","y");
+    s = s.replace("j","i");
     s = s.replace("z","s");
     s = s.replace("q","k.");
 
@@ -48,7 +48,7 @@ var hiero = function() {
   }
 
   return {
-    getHeiroglyphUrl: getHeiroglyphUrl,
+    getHieroglyphUrl: getHieroglyphUrl,
     standardiseAccents: standardiseAccents
   };
 }();

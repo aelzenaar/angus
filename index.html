@@ -5,6 +5,7 @@
     <title>ANGUS &mdash; ANcient eGyptian Utility for Symbols</title>
     <script src="jquery.js"></script>
     <script src="hiero.js"></script>
+    <script src="uniliterals.js"></script>
 
     <style>
       .hidden { display: none; }
@@ -14,9 +15,9 @@
   <body>
     <h1>ANGUS &mdash; ANcient eGyptian Utility for Symbols</h1>
 
-    <div id="questionbox"/>
+    <div id="questionbox"></div>
 
-    <div id="answerbox"><input type="text" id="answer" name="answer" class="hidden2"/><div>
+    <div id="answerbox"><input type="text" id="answer" name="answer" class="hidden"/><div>
 
     <div>
       <button id="button-gen">Generate</button>
@@ -30,35 +31,31 @@ var qnOb;
 
 $( document ).ready(function() {
   $( "#button-gen" ).click(function( event ) {
-    $.ajax({
-      url:"/get/symbol",
-      success: function(result) {
-                 qnOb = JSON.parse(result);
-                 qnOb.images.forEach(function(image,_) {
-                   $("#questionbox").empty();
-                   $("#questionbox").append("<img href=\""+image+"\" />&nbsp;");
-                 });
-                 $("#button-gen").addClass("hidden");
-                 $("#button-check").removeClass("hidden");
-                 $("#answer").removeClass("hidden");
-               }
+    qnOb = uniliterals[Math.floor(Math.random()*uniliterals.length)];
+    qnOb.hiero.forEach(function(image,_) {
+      $("#questionbox").empty();
+      console.log(hiero.getHieroglyphUrl(image))
+      $("#questionbox").append("<img src=\""+hiero.getHieroglyphUrl(image)+"\" alt=\"broken\"/>&nbsp;");
     });
+    $("#button-gen").addClass("hidden");
+    $("#button-check").removeClass("hidden");
+    $("#answer").removeClass("hidden");
   });
 
   $( "#button-check" ).click(function( event ) {
-    claim = $("#answer").attr("value");
-    if(claim == qnOb.text) {
+    claim = $("#answer").val();
+    if(claim == qnOb.translit) {
       $("#status").html("Correct");
     }
     else {
-      $("#status").html("Incorrect, expected " + qnOb.text);
+      $("#status").html("Incorrect, expected " + qnOb.translit + ", got " + claim);
     }
     $("#button-gen").removeClass("hidden");
     $("#button-check").addClass("hidden");
   });
 
   $("#answer").on("input", function() {
-    $("#answer").val(hiero.standardiseAccents($("#answer").val()))
+    $("#answer").val(hiero.standardiseAccents($("#answer").val()));
   });
 });
     </script>
