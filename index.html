@@ -41,6 +41,7 @@ $( document ).ready(function() {
     $("#button-gen").addClass("hidden");
     $("#button-check").removeClass("hidden");
     $("#answer").removeClass("hidden");
+    $("#answer").val("");
   });
 
   $( "#button-check" ).click(function( event ) {
@@ -53,6 +54,7 @@ $( document ).ready(function() {
     }
     $("#button-gen").removeClass("hidden");
     $("#button-check").addClass("hidden");
+    $("#answer").addClass("hidden");
   });
 
   $("#answer").on("input", function() {
