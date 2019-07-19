@@ -10,6 +10,8 @@
     <style>
       .hidden { display: none; }
       #answer { font-size: 150%; }
+      .hieroglyph { float: left; padding: 5px; }
+      #questionbox::after { content: ""; clear: both; display: table; }
     </style>
   </head>
   <body>
@@ -32,10 +34,9 @@ var qnOb;
 $( document ).ready(function() {
   $( "#button-gen" ).click(function( event ) {
     qnOb = uniliterals[Math.floor(Math.random()*uniliterals.length)];
+    $("#questionbox").empty();
     qnOb.hiero.forEach(function(image,_) {
-      $("#questionbox").empty();
-      console.log(hiero.getHieroglyphUrl(image))
-      $("#questionbox").append("<img src=\""+hiero.getHieroglyphUrl(image)+"\" alt=\"broken\"/>&nbsp;");
+      $("#questionbox").append("<img src=\""+hiero.getHieroglyphUrl(image)+"\" alt=\"broken\" class=\"hieroglyph\"/>&nbsp;");
     });
     $("#button-gen").addClass("hidden");
     $("#button-check").removeClass("hidden");
